@@ -65,7 +65,7 @@ def tokenize(text):
         Outputs:
             clean_tokens: list of tokens
         """
-    
+
     # Replace any URL with  urlplaceholder
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     detected_urls = re.findall(url_regex, text)
@@ -92,15 +92,41 @@ def tokenize(text):
 
 
 def build_model():
-    pass
+    """ Define the pipeline
+
+    Returns:
+    cv: gridsearch cv model object. Gridsearchcv object with optimaize parameters.
+    """
+    pipeline = Pipeline([
+        ('vect', CountVectorizer(tokenizer=tokenize)),
+        ('tfidf', TfidfTransformer()),
+        ('clf', MultiOutputClassifier(LinearSVC(multi_class="crammer_singer"), n_jobs=1))
+
+    ])
+    parameters = {
+        'clf__estimator__C': [0.8, 1.0, 1.2, 1.4],
+        'clf__estimator__max_iter': [500, 1000, 1200, 1500],
+    }
+    cv = GridSearchCV(pipeline, param_grid=parameters, scoring='f1_weighted', verbose=1, cv=3)
+
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    """
+
+    :param model:
+    :param X_test:
+    :param Y_test:
+    :param category_names:
+    :return:
+    """
+    model_predict = model.predict(X_test)
+    print(classification_report(Y_test, model_predict, target_names=category_names))
 
 
 def save_model(model, model_filepath):
-    pass
+    pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():
