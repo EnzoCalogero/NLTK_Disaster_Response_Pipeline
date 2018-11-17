@@ -26,11 +26,12 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+table_name = 'Messages'
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table(table_name, engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,9 +43,34 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
+    # All Source Category
+    category_counts = list(df[df.columns[4:]].sum())
+    category_names = df.columns[4:]
+
+    # Direct Source categories
+    temp = df[df['genre'] == 'direct'].copy()
+    category_direct_counts = list(temp[temp.columns[4:]].sum())
+
+    category_total = sum(category_direct_counts)
+    category_direct_percentage = list(temp[temp.columns[4:]].sum() / category_total)
+
+
+    # News Source categories
+    temp = df[df['genre'] == 'news'].copy()
+    category_news_counts = list(temp[temp.columns[4:]].sum())
+
+    category_total = sum(category_news_counts)
+    category_news_percentage = list(temp[temp.columns[4:]].sum() / category_total)
+
+    # Social Source categories
+    temp = df[df['genre'] == 'social'].copy()
+    category_social_counts = list(temp[temp.columns[4:]].sum())
+
+    category_total = sum(category_social_counts)
+    category_social_percentage = list(temp[temp.columns[4:]].sum() / category_total)
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+
     graphs = [
         {
             'data': [
@@ -55,12 +81,93 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Distribution of Categories for all the sources',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=category_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Count",
+                    'tickangle': -35
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': -35
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=category_direct_counts,
+                    name='Direct'
+                ),
+                Bar(
+                    x=category_names,
+                    y=category_news_counts,
+                    name='News'
+                    ),
+                Bar(
+                    x=category_names,
+                    y=category_social_counts,
+                    name='Social'
+                    )
+                ],
+
+            'layout': {
+                'title': 'Number of Messages for Each Categories Group by  Source',
+                'yaxis': {
+                    'title': "Count",
+                    'tickangle': -35
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': -35
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=category_direct_percentage,
+                    name='Direct'
+                ),
+                Bar(
+                    x=category_names,
+                    y=category_news_percentage,
+                    name='News'
+                ),
+                Bar(
+                    x=category_names,
+                    y=category_social_percentage,
+                    name='Social'
+                )
+            ],
+            'layout': {
+                'title': 'Percentage of Messages for Each Categories Group by  Source',
+                'yaxis': {
+                    'title': "Relative percentage",
+                    'tickangle': -35
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': -35
                 }
             }
         }

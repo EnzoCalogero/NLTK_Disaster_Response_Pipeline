@@ -22,8 +22,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="https://www.udacity.com/">Made with Udacity</a></li>
-                <li><a href="https://github.com/">Contact</a></li>
+               <li><a href="https://github.com/EnzoCalogero/NLTK_Disaster_Response_Pipeline/">Project Source</a></li>
             </ul>
         </div>
     </div>
@@ -58,6 +57,14 @@
             <h1 class="text-center">Overview of Training Dataset</h1>
         </div>
     {% endblock %}
+    <div>
+        The Overview is compose of the following diagram:<br>
+
+        1. Histogram of the number of messages for each genre;<br>
+        2. Histogram of the number of messages for each category;<br>
+        3. Histogram of the number of messages for each category group by genre;<br>
+        4. Histogram of the percentage of messages for each category group by genre;<br>
+    </div>
 
     {% for id in ids %}
         <div id="{{id}}"></div>
