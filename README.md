@@ -1,13 +1,17 @@
 # Disaster Response Pipeline Project
 
-### project Overview
-This project aim  is to classified a flow of messages and identify those related to a disaster.
-It use a dataset provide by "Figure Eight"" to build a model for an API that classifies disaster messages.
+### Project Overview
+This project aim  is to classified text messages and identify those related to a disaster.
+The model is tested and evaluated with dataset provide by "Figure Eight".
 
 ### Motivation
 
-This repository contains the python source code to create a flask web app, which an emergency agency could use during a disaster event (e.g. an flood or storm).
-The application would consider only the message disaster related and in case it will classify the message into several categories, in order that the message can be directed to the appropriate aid agencies.
+This repository contains the python source code to create a flask web app.
+which coul dbe used by an emergency agency during a disaster event (e.g. an flood or storm) to receive information realtime from social media sourecs.
+The application would receive text messages as input, and consider only the messages disaster related and it will classify the message into several categories. 
+Each category represent information needed to investigate specic case of disasterand therefore the application can redirect the meesage to 
+ to the appropriate aid agencies.
+
 ### Overview of the dataset
 
 The data set used for the nltk training has been provided by "Figure Eight" it is composed of messages from 3 different sources ('direct', 'news', 'social').
@@ -15,7 +19,7 @@ These message are a mix of generic message and disaster related messages (total 
 
 ### Instructions:
 
-Tese steps allow to rebuild and run the flask application.
+These steps allow to rebuild and run the flask application.
 
 1. unzip the file ./data/data.7z on the same folder (./data/), it will extract the two files needed to populate the database (disaster_categories.csv and disaster_message.csv).
 
@@ -57,7 +61,12 @@ The Overview is compose of the following diagrams:
 
 **app/run.py**: Start the Python server for the web app and prepare visualizations.
 
+**ETL Pipeline Preparation.ipynb**: jupiter notebook used to create process_data.py file.
+
+**ML Pipeline Preparation.ipynb**: jupiter notebook used to create train_classifier.py file.
+
 ### Required libraries
+
 . Flask 1.0.2
 
 . plotly 3.4.1
