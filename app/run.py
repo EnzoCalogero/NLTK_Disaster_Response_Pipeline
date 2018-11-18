@@ -40,7 +40,6 @@ model = joblib.load("../models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
@@ -81,12 +80,12 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Categories for all the sources',
+                'title': 'Number Message for each Sources',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Category"
+                    'title': "Source"
                 }
             }
         },
@@ -99,7 +98,7 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Number Message for each Category',
                 'yaxis': {
                     'title': "Count",
                     'tickangle': -35
@@ -130,7 +129,7 @@ def index():
                 ],
 
             'layout': {
-                'title': 'Number of Messages for Each Categories Group by  Source',
+                'title': 'Number of Messages for Each Category Grouped by Source',
                 'yaxis': {
                     'title': "Count",
                     'tickangle': -35
@@ -160,7 +159,7 @@ def index():
                 )
             ],
             'layout': {
-                'title': 'Percentage of Messages for Each Categories Group by  Source',
+                'title': 'Percentage of Messages for Each Category Grouped by Source',
                 'yaxis': {
                     'title': "Relative percentage",
                     'tickangle': -35

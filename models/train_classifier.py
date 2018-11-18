@@ -1,48 +1,35 @@
-import sys
 # import libraries
-import pandas as pd
-import numpy as np
-from sqlalchemy import create_engine
-import re
 import pickle
+import re
+import sys
+
 import nltk
+import pandas as pd
+from sqlalchemy import create_engine
 
 nltk.download('punkt')
 nltk.download('stopwords')
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
-
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, make_scorer
 from sklearn.model_selection import GridSearchCV
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier, ExtraTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier,RadiusNeighborsClassifier
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
-from sklearn.linear_model import LogisticRegression,LogisticRegressionCV
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
-
-
 
 def load_data(database_filepath):
     """
-     connect to the sqlite database and export a mesage dataframe
+     connect to the sqlite database and export the mesages dataframe
     --
     Inputs:
         database_filepath: sqlite database
     Outputs:
         X: Independent Variables
         Y: Dependent Variables
-        Y.columns.values : List variables/ Features
+        category_names : List variables/ Features
     """
     table_name = 'Messages'
     engine = create_engine('sqlite:///{}'.format(database_filepath))
@@ -92,7 +79,7 @@ def tokenize(text):
 
 
 def build_model():
-    """ Define the pipeline
+    """ Define the model pipeline
 
     Returns:
     cv: gridsearch cv model object. Gridsearchcv object with optimaize parameters.
@@ -114,18 +101,26 @@ def build_model():
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
+    The function print out the classification performance for the test subset
 
-    :param model:
-    :param X_test:
-    :param Y_test:
-    :param category_names:
-    :return:
+    :param model: model object
+    :param X_test: Independent Variables for the test set
+    :param Y_test: Dependent Variables for the test set
+    :param category_names: list of the features related to the disaster categories
+    :return: None
     """
     model_predict = model.predict(X_test)
     print(classification_report(Y_test, model_predict, target_names=category_names))
 
 
 def save_model(model, model_filepath):
+    """
+    The function save the model parameter and weights to the given
+    file path in the pincle file format.
+    :param model: model object
+    :param model_filepath: pickle file path
+    :return: none
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
@@ -135,13 +130,13 @@ def main():
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-        
+
         print('Building model...')
         model = build_model()
-        
+
         print('Training model...')
         model.fit(X_train, Y_train)
-        
+
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
@@ -151,9 +146,9 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
+        print('Please provide the filepath of the disaster messages database ' 
+              'as the first argument and the filepath of the pickle file to ' 
+              'save the model to as the second argument. \n\nExample: python '
               'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
